@@ -10,7 +10,7 @@ def scrape_linkedin_profile(profile_url, cookies, debug=True):
             print(f"DEBUG: {message}")
 
     def extract_identifier(url):
-        return url.split("/in/")[-1].strip("/")
+        return url.split("/in/")[-1].strip("/   ")
 
     def clean_text(text):
         if not text:
