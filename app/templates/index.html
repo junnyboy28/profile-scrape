@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Profile Scraper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Hero Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/@heroicons/react@2.0.18/24/outline.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <svg class="h-8 w-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                    <span class="ml-2 text-xl font-bold text-gray-900">LinkedIn Scraper</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Hero Section -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+            <div class="px-4 py-5 sm:p-6">
+                <h1 class="text-3xl font-bold text-gray-900">LinkedIn Profile Scraper</h1>
+                <p class="mt-2 text-gray-600">Extract professional insights from any LinkedIn profile</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Input Section -->
+            <div class="w-full lg:w-1/3">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <form id="scrapeForm" class="space-y-6">
+                        <div>
+                            <label for="profileUrl" class="block text-sm font-medium text-gray-700">Profile URL</label>
+                            <div class="mt-1">
+                                <input type="url" id="profileUrl" required
+                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    placeholder="https://www.linkedin.com/in/username">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="liAtCookie" class="block text-sm font-medium text-gray-700">
+                                Authentication Cookie
+                                <span class="ml-1 text-xs text-blue-600 cursor-pointer" onclick="showInstructions()">
+                                    (How to get this?)
+                                </span>
+                            </label>
+                            <div class="mt-1">
+                                <input type="text" id="liAtCookie" required
+                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    placeholder="Enter li_at cookie value">
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Extract Profile Data
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Instructions Dialog -->
+                <div id="instructionsDialog" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
+                    <div class="bg-white rounded-lg p-6 max-w-md mx-4">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">How to get the li_at cookie</h3>
+                        <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                            <li>Go to LinkedIn.com and log in</li>
+                            <li>Right-click anywhere and select 'Inspect' (or press F12)</li>
+                            <li>Go to the 'Application' tab</li>
+                            <li>Under 'Storage' expand 'Cookies'</li>
+                            <li>Click on 'https://www.linkedin.com'</li>
+                            <li>Find 'li_at' in the list</li>
+                            <li>Copy the 'Value' field</li>
+                        </ol>
+                        <button onclick="hideInstructions()" class="mt-4 w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Got it
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="w-full lg:w-2/3">
+                <!-- Loading State -->
+                <div id="loadingState" class="hidden">
+                    <div class="bg-white rounded-lg shadow-sm p-8">
+                        <div class="flex items-center justify-center">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                            <span class="ml-2 text-gray-600">Extracting profile data...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div id="errorMessage" class="hidden bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-red-700"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Card -->
+                <div id="results" class="hidden bg-white rounded-lg shadow-sm">
+                    <div class="px-4 py-5 sm:p-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Profile Data</h3>
+                        <div id="profileData" class="overflow-x-auto"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Show/Hide Instructions Dialog
+        function showInstructions() {
+            document.getElementById('instructionsDialog').classList.remove('hidden');
+        }
+
+        function hideInstructions() {
+            document.getElementById('instructionsDialog').classList.add('hidden');
+        }
+
+        document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const profileUrl = document.getElementById('profileUrl').value;
+            const liAtCookie = document.getElementById('liAtCookie').value;
+            
+            // Format cookies for the backend
+            const cookies = [{
+                "name": "li_at",
+                "value": liAtCookie,
+                "domain": ".linkedin.com",
+                "path": "/"
+            }];
+
+            // Show loading state
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('errorMessage').classList.add('hidden');
+
+            try {
+                const response = await fetch('/scrape_profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        profile_url: profileUrl,
+                        cookies: cookies
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                showError(`Error: ${error.message}`);
+            } finally {
+                document.getElementById('loadingState').classList.add('hidden');
+            }
+        });
+
+        function displayResults(data) {
+    const resultsDiv = document.getElementById('results');
+    const profileDataDiv = document.getElementById('profileData');
+    
+    // Create profile card
+    const person = data.person;
+    profileDataDiv.innerHTML = `
+        <div class="space-y-6">
+            <!-- Basic Info -->
+            <div class="flex items-start space-x-4">
+                <img src="${person.photoUrl || '#'}" 
+                     alt="Profile Photo" 
+                     class="w-24 h-24 rounded-full object-cover"
+                     onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23ccc%22><rect width=%2224%22 height=%2224%22/></svg>'">
+                <div>
+                    <h3 class="text-xl font-semibold">${person.firstName} ${person.lastName}</h3>
+                    <p class="text-gray-600">${person.headline || 'No headline'}</p>
+                    <p class="text-gray-500 text-sm">${person.location || 'No location'}</p>
+                    ${person.followerCount ? `<p class="text-gray-500 text-sm">${person.followerCount} followers</p>` : ''}
+                </div>
+            </div>
+
+            <!-- Summary -->
+            ${person.summary !== 'N/A' ? `
+                <div class="border-t pt-4">
+                    <h4 class="font-semibold mb-2">About</h4>
+                    <p class="text-gray-700">${person.summary}</p>
+                </div>
+            ` : ''}
+
+            <!-- Experience -->
+            ${person.positions && person.positions.length > 0 ? `
+                <div class="border-t pt-4">
+                    <h4 class="font-semibold mb-2">Experience</h4>
+                    <div class="space-y-4">
+                        ${person.positions.map(pos => `
+                            <div class="text-sm">
+                                <div class="font-medium">${pos.title}</div>
+                                <div class="text-gray-600">${pos.company}</div>
+                                <div class="text-gray-500">${pos.dateRange}</div>
+                                ${pos.description !== 'N/A' ? `<p class="text-gray-700 mt-1">${pos.description}</p>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : ''}
+
+            <!-- Education -->
+            ${person.schools && person.schools.length > 0 ? `
+                <div class="border-t pt-4">
+                    <h4 class="font-semibold mb-2">Education</h4>
+                    <div class="space-y-4">
+                        ${person.schools.map(school => `
+                            <div class="text-sm">
+                                <div class="font-medium">${school.schoolName}</div>
+                                <div class="text-gray-600">${school.degree}</div>
+                                <div class="text-gray-500">${school.dateRange}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : ''}
+
+            <!-- Skills -->
+            ${person.skills && person.skills.length > 0 ? `
+                <div class="border-t pt-4">
+                    <h4 class="font-semibold mb-2">Skills</h4>
+                    <div class="flex flex-wrap gap-2">
+                        ${person.skills.map(skill => `
+                            <span class="bg-blue-100 text-blue-800 text-sm px-2 py-1 rounded">${skill}</span>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : ''}
+
+            <!-- Raw Data Toggle -->
+            <div class="border-t pt-4">
+                <button onclick="toggleRawData()" class="text-blue-600 text-sm hover:text-blue-800">
+                    Toggle Raw JSON Data
+                </button>
+                <pre id="rawData" class="hidden mt-2 p-4 bg-gray-50 rounded overflow-auto text-sm">${JSON.stringify(data, null, 2)}</pre>
+            </div>
+        </div>
+    `;
+    
+    // Show results section
+    resultsDiv.classList.remove('hidden');
+}
+
+// Add this new function for toggling raw data
+function toggleRawData() {
+    const rawData = document.getElementById('rawData');
+    rawData.classList.toggle('hidden');
+}
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.querySelector('p').textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
