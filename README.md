@@ -1,54 +1,154 @@
 # LinkedIn Profile Scraper
 
-A web application that allows users to scrape LinkedIn profiles and extract relevant data for analysis. The application uses Flask for the backend and HTML pages styled with Tailwind UI for the frontend.
-
----
+A web application that scrapes LinkedIn profile data using Python, Playwright, and Flask. Deployed on Railway.app with Docker containerization.
 
 ## Features
 
-- Scrape LinkedIn profiles for details like name, job title, company, skills, and more.
-- User-friendly interface designed with Tailwind UI.
-- Efficient web scraping using Beautiful Soup and Selenium.
-- Export scraped data to a CSV file for further analysis.
-- Responsive and clean frontend design.
-
----
+- Extracts key profile information:
+  - Full name
+  - Headline
+  - Location
+  - Follower count
+  - Profile photo URL
+  - Background photo URL
+  - About/Summary section
 
 ## Tech Stack
 
-### Backend
-- **Python**
-- **Flask**
-- **Beautiful Soup** (for HTML parsing)
-- **Selenium** (for handling dynamic content)
+- **Backend**: Python, Flask
+- **Web Scraping**: Playwright
+- **Containerization**: Docker
+- **Deployment**: Railway.app
+- **CI/CD**: Automated deployment via Railway
 
-### Frontend
-- **HTML**
-- **Tailwind UI**
+## Prerequisites
 
----
+- Python 3.11+
+- LinkedIn Account Cookies (li_at)
+- Docker (for local containerized testing)
 
-## Installation and Setup
+## Local Setup
 
-### Prerequisites
-1. **Python 3.8+**
-2. **Node.js and npm** (for Tailwind setup, if necessary)
-3. **ChromeDriver** (compatible with your Chrome browser version)
-
-### Steps
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/profile-scrape.git
-   cd profile-scrape
+```bash
+git clone <your-repo-url>
+cd linkedin-scraper
+```
+
+2. Create a virtual environment:
+```bash
 python -m venv venv
-source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. Install dependencies:
+```bash
 pip install -r requirements.txt
+playwright install chromium
+```
 
-npm install
-flask run
+4. Set up environment variables:
+Create a `.env` file in the root directory:
+```
+LINKEDIN_COOKIE=your_li_at_cookie_value
+```
 
-![image](https://github.com/user-attachments/assets/4c42bc40-0000-468e-ba19-b710dd9394f0)
+5. Run the application:
+```bash
+python run.py
+```
 
-![image](https://github.com/user-attachments/assets/f0cda8d9-0d47-4397-bddb-50b4d6c81ef4)
+The application will be available at `http://localhost:8080`
 
-![image](https://github.com/user-attachments/assets/8fdd3ed5-6f5b-49fd-8885-c03d17813357)
+## Docker Setup
+
+1. Build the Docker image:
+```bash
+docker build -t linkedin-scraper .
+```
+
+2. Run the container:
+```bash
+docker run -p 8080:8080 linkedin-scraper
+```
+
+## Deployment
+
+This application is configured for deployment on Railway.app:
+
+1. Fork this repository
+2. Create a new project on Railway.app
+3. Connect your GitHub repository
+4. Add environment variables in Railway dashboard
+5. Deploy!
+
+## Project Structure
+
+```
+linkedin-scraper/
+├── app/
+│   ├── templates/
+│   │   └── index.html
+│   ├── __init__.py
+│   ├── config.py
+│   ├── routes.py
+│   ├── scraper.py
+│   ├── storage.py
+│   └── utils.py
+├── data/
+│   └── profile_data.json
+├── .env
+├── .gitignore
+├── Dockerfile
+├── Procfile
+├── README.md
+├── requirements.txt
+├── run.py
+└── setup.sh
+```
+
+## API Usage
+
+Send a POST request to `/scrape` with JSON body:
+```json
+{
+    "profile_url": "https://www.linkedin.com/in/example-profile/",
+    "cookie": "your_li_at_cookie_value"
+}
+```
+
+Response format:
+```json
+{
+    "person": {
+        "backgroundUrl": "url",
+        "firstName": "John",
+        "followerCount": 500,
+        "headline": "Software Engineer",
+        "lastName": "Doe",
+        "location": "New York, NY",
+        "photoUrl": "url",
+        "summary": "About section text",
+        "linkedInUrl": "profile_url"
+    }
+}
+```
+
+## Security Notes
+
+- Never commit your LinkedIn cookies to version control
+- Use environment variables for sensitive data
+- Consider implementing rate limiting for production use
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+
+## Disclaimer
+
+This tool is for educational purposes only. Use it responsibly and in accordance with LinkedIn's terms of service and robots.txt directives.
