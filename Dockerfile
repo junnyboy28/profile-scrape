@@ -1,5 +1,8 @@
-# Use a newer Ubuntu base image that has GLIBC 2.38
-FROM ubuntu:23.10
+# Use Ubuntu 22.04 LTS (Jammy) instead
+FROM ubuntu:22.04
+
+# Prevent tzdata from asking for user input
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Set working directory
 WORKDIR /app
@@ -7,6 +10,7 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     python3-pip \
+    python3-venv \
     wget \
     build-essential \
     libnss3 \
@@ -20,7 +24,20 @@ RUN apt-get update && apt-get install -y \
     libcups2 \
     libdbus-1-3 \
     libxss1 \
+    libxtst6 \
+    xvfb \
+    libgconf-2-4 \
+    libatk1.0-0 \
+    libdrm2 \
+    libxkbcommon0 \
+    fonts-liberation \
+    libu2f-udev \
+    libvulkan1 \
     && rm -rf /var/lib/apt/lists/*
+
+# Create and activate virtual environment
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
 # Copy requirements file
 COPY requirements.txt .
@@ -28,7 +45,7 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Install Playwright browsers
+# Install Playwright with only Chromium
 RUN playwright install chromium
 RUN playwright install-deps
 
