@@ -181,99 +181,72 @@
         });
 
         function displayResults(data) {
-    const resultsDiv = document.getElementById('results');
-    const profileDataDiv = document.getElementById('profileData');
-    
-    // Create profile card
-    const person = data.person;
-    profileDataDiv.innerHTML = `
-        <div class="space-y-6">
-            <!-- Basic Info -->
-            <div class="flex items-start space-x-4">
-                <img src="${person.photoUrl || '#'}" 
-                     alt="Profile Photo" 
-                     class="w-24 h-24 rounded-full object-cover"
-                     onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23ccc%22><rect width=%2224%22 height=%2224%22/></svg>'">
-                <div>
-                    <h3 class="text-xl font-semibold">${person.firstName} ${person.lastName}</h3>
-                    <p class="text-gray-600">${person.headline || 'No headline'}</p>
-                    <p class="text-gray-500 text-sm">${person.location || 'No location'}</p>
-                    ${person.followerCount ? `<p class="text-gray-500 text-sm">${person.followerCount} followers</p>` : ''}
-                </div>
-            </div>
+            const resultsDiv = document.getElementById('results');
+            const profileDataDiv = document.getElementById('profileData');
+            
+            const person = data.person;
+            profileDataDiv.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Basic Info -->
+                    <div class="flex items-start space-x-4">
+                        <img src="${person.photoUrl || '#'}" 
+                             alt="Profile Photo" 
+                             class="w-24 h-24 rounded-full object-cover"
+                             onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23ccc%22><rect width=%2224%22 height=%2224%22/></svg>'">
+                        <div>
+                            <h3 class="text-xl font-semibold">${person.firstName} ${person.lastName}</h3>
+                            <p class="text-gray-600">${person.headline || 'No headline'}</p>
+                            <p class="text-gray-500 text-sm">${person.location || 'No location'}</p>
+                            ${person.followerCount ? `<p class="text-gray-500 text-sm">${person.followerCount} followers</p>` : ''}
+                        </div>
+                    </div>
 
-            <!-- Summary -->
-            ${person.summary !== 'N/A' ? `
-                <div class="border-t pt-4">
-                    <h4 class="font-semibold mb-2">About</h4>
-                    <p class="text-gray-700">${person.summary}</p>
-                </div>
-            ` : ''}
+                    <!-- Summary -->
+                    ${person.summary !== 'N/A' ? `
+                        <div class="border-t pt-4">
+                            <h4 class="font-semibold mb-2">About</h4>
+                            <p class="text-gray-700">${person.summary}</p>
+                        </div>
+                    ` : ''}
 
-            <!-- Experience -->
-            ${person.positions && person.positions.length > 0 ? `
-                <div class="border-t pt-4">
-                    <h4 class="font-semibold mb-2">Experience</h4>
-                    <div class="space-y-4">
-                        ${person.positions.map(pos => `
-                            <div class="text-sm">
-                                <div class="font-medium">${pos.title}</div>
-                                <div class="text-gray-600">${pos.company}</div>
-                                <div class="text-gray-500">${pos.dateRange}</div>
-                                ${pos.description !== 'N/A' ? `<p class="text-gray-700 mt-1">${pos.description}</p>` : ''}
+                    <!-- Positions -->
+                    ${person.positions && person.positions.length > 0 ? `
+                        <div class="border-t pt-4">
+                            <h4 class="font-semibold mb-2">Experience</h4>
+                            <ul class="list-disc list-inside text-gray-700">
+                                ${person.positions.map(pos => `<li>${pos}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+
+                    <!-- Skills -->
+                    ${person.skills && person.skills.length > 0 ? `
+                        <div class="border-t pt-4">
+                            <h4 class="font-semibold mb-2">Skills</h4>
+                            <div class="flex flex-wrap gap-2">
+                                ${person.skills.map(skill => `
+                                    <span class="bg-blue-100 text-blue-800 text-sm px-2 py-1 rounded">${skill}</span>
+                                `).join('')}
                             </div>
-                        `).join('')}
+                        </div>
+                    ` : ''}
+
+                    <!-- Raw Data Toggle -->
+                    <div class="border-t pt-4">
+                        <button onclick="toggleRawData()" class="text-blue-600 text-sm hover:text-blue-800">
+                            Toggle Raw JSON Data
+                        </button>
+                        <pre id="rawData" class="hidden mt-2 p-4 bg-gray-50 rounded overflow-auto text-sm">${JSON.stringify(data, null, 2)}</pre>
                     </div>
                 </div>
-            ` : ''}
+            `;
+            resultsDiv.classList.remove('hidden');
+        }
 
-            <!-- Education -->
-            ${person.schools && person.schools.length > 0 ? `
-                <div class="border-t pt-4">
-                    <h4 class="font-semibold mb-2">Education</h4>
-                    <div class="space-y-4">
-                        ${person.schools.map(school => `
-                            <div class="text-sm">
-                                <div class="font-medium">${school.schoolName}</div>
-                                <div class="text-gray-600">${school.degree}</div>
-                                <div class="text-gray-500">${school.dateRange}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            ` : ''}
-
-            <!-- Skills -->
-            ${person.skills && person.skills.length > 0 ? `
-                <div class="border-t pt-4">
-                    <h4 class="font-semibold mb-2">Skills</h4>
-                    <div class="flex flex-wrap gap-2">
-                        ${person.skills.map(skill => `
-                            <span class="bg-blue-100 text-blue-800 text-sm px-2 py-1 rounded">${skill}</span>
-                        `).join('')}
-                    </div>
-                </div>
-            ` : ''}
-
-            <!-- Raw Data Toggle -->
-            <div class="border-t pt-4">
-                <button onclick="toggleRawData()" class="text-blue-600 text-sm hover:text-blue-800">
-                    Toggle Raw JSON Data
-                </button>
-                <pre id="rawData" class="hidden mt-2 p-4 bg-gray-50 rounded overflow-auto text-sm">${JSON.stringify(data, null, 2)}</pre>
-            </div>
-        </div>
-    `;
-    
-    // Show results section
-    resultsDiv.classList.remove('hidden');
-}
-
-// Add this new function for toggling raw data
-function toggleRawData() {
-    const rawData = document.getElementById('rawData');
-    rawData.classList.toggle('hidden');
-}
+        function toggleRawData() {
+            const rawData = document.getElementById('rawData');
+            rawData.classList.toggle('hidden');
+        }
 
         function showError(message) {
             const errorDiv = document.getElementById('errorMessage');

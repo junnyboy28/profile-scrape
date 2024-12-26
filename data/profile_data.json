@@ -1,22 +1,13 @@
 {
     "person": {
-        "publicIdentifier": "jimil-mandani-ab804121b",
-        "linkedInUrl": "https://www.linkedin.com/in/jimil-mandani-ab804121b/",
+        "backgroundUrl": "https://media.licdn.com/dms/image/v2/D4D16AQHbkPF2dFs0Ug/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1734635249080?e=1740614400&v=beta&t=lZKVG7t8KEVDrkfq-xRRia5kgaK7fzqLLqiBpQqZeq8",
         "firstName": "Jimil",
-        "lastName": "Mandani",
+        "followerCount": 1623,
         "headline": "freelancer software dev | DA-AI-IOT",
-        "location": "N/A",
-        "summary": "N/A",
-        "photoUrl": "https://media.licdn.com/dms/image/v2/D4D03AQGhbu2wR0xdmg/profile-displayphoto-shrink_200_200/B4DZPgVuNCHUAc-/0/1734635611571?e=1740009600&v=beta&t=cuL8uPCcOwJ7x_oRzYIP-x_Ydwx5kiRb_yrT1vJjYI4",
-        "backgroundUrl": "https://media.licdn.com/dms/image/v2/D4D16AQHbkPF2dFs0Ug/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1734635249080?e=1740009600&v=beta&t=jizz0JPOOpQlbd5gRTXyMZBxushQPcw8s7ZdaBDHZJ0",
-        "openToWork": false,
-        "premium": false,
-        "pronoun": "N/A",
-        "followerCount": 1601,
-        "positions": [],
-        "schools": [],
-        "skills": [],
-        "languages": [],
-        "certifications": []
+        "lastName": "Mandani",
+        "location": "Padre Conceicao College of Engineering, Verna",
+        "photoUrl": "https://media.licdn.com/dms/image/v2/D4D03AQGhbu2wR0xdmg/profile-displayphoto-shrink_200_200/B4DZPgVuNCHUAc-/0/1734635611571?e=1740614400&v=beta&t=UEIWk19RnERn-849YzmXGLVGdG6GPb-5RbMNEmfbvNI",
+        "summary": "Hey... this is Jimil.. I am a professionally a software dev.. i also take interest in stuff related to data and ai... i believe engineering teaches you everything be it related to career or not.. experience wise i have 5+ months of industry experience and aim to have at least a year of experience by the time i graduate next year.. I also like having conversations and talks related to tech, ai, politics and sports... Hey... this is Jimil.. I am a professionally a software dev.. i also take interest in stuff related to data and ai... i believe engineering teaches you everything be it related to career or not.. experience wise i have 5+ months of industry experience and aim to have at least a year of experience by the time i graduate next year.. I also like having conversations and talks related to tech, ai, politics and sports...",
+        "linkedInUrl": "https://www.linkedin.com/in/jimil-mandani-ab804121b/"
     }
 }
