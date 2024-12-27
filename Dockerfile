@@ -1,13 +1,13 @@
-# Use Ubuntu 22.04 LTS (Jammy) instead
+# Using Ubuntu 22.04 LTS (Jammy)
 FROM ubuntu:22.04
 
-# Prevent tzdata from asking for user input
+
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Set working directory
+
 WORKDIR /app
 
-# Install system dependencies
+
 RUN apt-get update && apt-get install -y \
     python3-pip \
     python3-venv \
@@ -35,25 +35,24 @@ RUN apt-get update && apt-get install -y \
     libvulkan1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Create and activate virtual environment
+
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Copy requirements file
+
 COPY requirements.txt .
 
-# Install Python dependencies
+
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Install Playwright with only Chromium
 RUN playwright install chromium
 RUN playwright install-deps
 
-# Copy application code
+
 COPY . .
 
-# Expose port
+
 EXPOSE 8080
 
-# Command to run the application
+
 CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8080"]

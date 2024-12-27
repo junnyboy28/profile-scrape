@@ -6,11 +6,11 @@
     <title>LinkedIn Profile Scraper</title>
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Hero Icons -->
+    
     <link href="https://cdn.jsdelivr.net/npm/@heroicons/react@2.0.18/24/outline.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <!-- Navigation -->
+    
     <nav class="bg-white shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
@@ -25,7 +25,7 @@
     </nav>
 
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <!-- Hero Section -->
+        
         <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
             <div class="px-4 py-5 sm:p-6">
                 <h1 class="text-3xl font-bold text-gray-900">LinkedIn Profile Scraper</h1>
@@ -33,9 +33,9 @@
             </div>
         </div>
 
-        <!-- Main Content -->
+        
         <div class="flex flex-col lg:flex-row gap-8">
-            <!-- Input Section -->
+            
             <div class="w-full lg:w-1/3">
                 <div class="bg-white rounded-lg shadow-sm p-6">
                     <form id="scrapeForm" class="space-y-6">
@@ -69,7 +69,7 @@
                     </form>
                 </div>
 
-                <!-- Instructions Dialog -->
+                
                 <div id="instructionsDialog" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
                     <div class="bg-white rounded-lg p-6 max-w-md mx-4">
                         <h3 class="text-lg font-medium text-gray-900 mb-4">How to get the li_at cookie</h3>
@@ -89,9 +89,9 @@
                 </div>
             </div>
 
-            <!-- Results Section -->
+
             <div class="w-full lg:w-2/3">
-                <!-- Loading State -->
+                
                 <div id="loadingState" class="hidden">
                     <div class="bg-white rounded-lg shadow-sm p-8">
                         <div class="flex items-center justify-center">
@@ -101,7 +101,7 @@
                     </div>
                 </div>
 
-                <!-- Error Message -->
+                
                 <div id="errorMessage" class="hidden bg-red-50 border-l-4 border-red-400 p-4 mb-4">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -115,7 +115,7 @@
                     </div>
                 </div>
 
-                <!-- Results Card -->
+                
                 <div id="results" class="hidden bg-white rounded-lg shadow-sm">
                     <div class="px-4 py-5 sm:p-6">
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Profile Data</h3>
@@ -127,7 +127,7 @@
     </main>
 
     <script>
-        // Show/Hide Instructions Dialog
+        
         function showInstructions() {
             document.getElementById('instructionsDialog').classList.remove('hidden');
         }
@@ -142,7 +142,7 @@
             const profileUrl = document.getElementById('profileUrl').value;
             const liAtCookie = document.getElementById('liAtCookie').value;
             
-            // Format cookies for the backend
+            
             const cookies = [{
                 "name": "li_at",
                 "value": liAtCookie,
@@ -150,7 +150,7 @@
                 "path": "/"
             }];
 
-            // Show loading state
+            
             document.getElementById('loadingState').classList.remove('hidden');
             document.getElementById('results').classList.add('hidden');
             document.getElementById('errorMessage').classList.add('hidden');
@@ -187,7 +187,7 @@
             const person = data.person;
             profileDataDiv.innerHTML = `
                 <div class="space-y-6">
-                    <!-- Basic Info -->
+                    
                     <div class="flex items-start space-x-4">
                         <img src="${person.photoUrl || '#'}" 
                              alt="Profile Photo" 
@@ -201,7 +201,6 @@
                         </div>
                     </div>
 
-                    <!-- Summary -->
                     ${person.summary !== 'N/A' ? `
                         <div class="border-t pt-4">
                             <h4 class="font-semibold mb-2">About</h4>
@@ -209,7 +208,7 @@
                         </div>
                     ` : ''}
 
-                    <!-- Positions -->
+                   
                     ${person.positions && person.positions.length > 0 ? `
                         <div class="border-t pt-4">
                             <h4 class="font-semibold mb-2">Experience</h4>
@@ -219,7 +218,7 @@
                         </div>
                     ` : ''}
 
-                    <!-- Skills -->
+                    
                     ${person.skills && person.skills.length > 0 ? `
                         <div class="border-t pt-4">
                             <h4 class="font-semibold mb-2">Skills</h4>
@@ -231,7 +230,7 @@
                         </div>
                     ` : ''}
 
-                    <!-- Raw Data Toggle -->
+                    
                     <div class="border-t pt-4">
                         <button onclick="toggleRawData()" class="text-blue-600 text-sm hover:text-blue-800">
                             Toggle Raw JSON Data
