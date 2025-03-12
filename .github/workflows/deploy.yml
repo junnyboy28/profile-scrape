@@ -1,0 +1,48 @@
+name: Deploy Dockerfile to EC2
+
+on:
+  push:
+    paths:
+      - 'Dockerfile'  # Trigger only when Dockerfile changes
+    branches:
+      - master  # Adjust branch if needed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Copy Dockerfile to EC2
+      env:
+        PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+        HOST: ${{ secrets.EC2_HOST }}
+        USER: ${{ secrets.EC2_USER }}
+      run: |
+        echo "$PRIVATE_KEY" > private_key.pem
+        chmod 600 private_key.pem
+        scp -i private_key.pem -o StrictHostKeyChecking=no Dockerfile $USER@$HOST:/home/$USER/Dockerfile
+
+    - name: SSH into EC2 and Build & Restart Container
+      env:
+        PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+        HOST: ${{ secrets.EC2_HOST }}
+        USER: ${{ secrets.EC2_USER }}
+      run: |
+        ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
+          cd /home/$USER
+
+          # Build new Docker container
+          docker build -t myapp .
+
+          # Stop and remove the old container
+          docker stop myapp-container || true
+          docker rm myapp-container || true
+
+          # Run new container
+          docker run -d --name myapp-container -p 8080:8080 myapp
+
+          echo "Deployment Successful!"
+        EOF
